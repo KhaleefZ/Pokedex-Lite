@@ -4,16 +4,19 @@ import { useEffect, useState } from 'react';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { SearchBar } from '@/components/SearchBar';
 import { TypeFilter } from '@/components/TypeFilter';
+import { PokemonDetailModal } from '@/components/PokemonDetailModal';
 import { usePokemonContext } from '@/context/PokemonContext';
 import { usePokemon } from '@/hooks/usePokemon';
-import { fetchPokemonList, enrichPokemonWithTypes } from '@/lib/pokeapi';
-import type { PokemonListItem } from '@/types/pokemon';
+import { fetchPokemonList, enrichPokemonWithTypes, fetchPokemonDetail } from '@/lib/pokeapi';
+import type { PokemonListItem, PokemonDetail } from '@/types/pokemon';
 
 export default function Home() {
   const { state, dispatch } = usePokemonContext();
   const [allPokemon, setAllPokemon] = useState<PokemonListItem[]>([]);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [initialError, setInitialError] = useState<string | null>(null);
+  const [selectedPokemonDetail, setSelectedPokemonDetail] = useState<PokemonDetail | null>(null);
+  const [isDetailLoading, setIsDetailLoading] = useState(false);
 
   const {
     paginatedPokemon,
@@ -79,6 +82,22 @@ export default function Home() {
       }
     };
     loadInitialPokemon();
+  };
+
+  const handleOpenPokemonDetail = async (pokemon: PokemonListItem) => {
+    try {
+      setIsDetailLoading(true);
+      const detail = await fetchPokemonDetail(pokemon.id);
+      setSelectedPokemonDetail(detail);
+    } catch (error) {
+      console.error('Failed to load Pokémon detail:', error);
+    } finally {
+      setIsDetailLoading(false);
+    }
+  };
+
+  const handleClosePokemonDetail = () => {
+    setSelectedPokemonDetail(null);
   };
 
   if (isInitialLoading) {
@@ -162,7 +181,8 @@ export default function Home() {
               {paginatedPokemon.map((pokemon) => (
                 <div
                   key={pokemon.id}
-                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition"
+                  onClick={() => handleOpenPokemonDetail(pokemon)}
+                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl hover:scale-105 transition duration-300 cursor-pointer"
                 >
                   {/* Pokemon Image */}
                   <div className="bg-gradient-to-b from-blue-50 to-blue-100 p-4 flex justify-center">
@@ -242,6 +262,15 @@ export default function Home() {
           </div>
         )}
       </div>
+
+      {/* Pokemon Detail Modal */}
+      {selectedPokemonDetail && (
+        <PokemonDetailModal
+          pokemon={selectedPokemonDetail}
+          isOpen={!!selectedPokemonDetail}
+          onClose={handleClosePokemonDetail}
+        />
+      )}
     </main>
   );
 }
