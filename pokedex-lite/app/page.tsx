@@ -5,6 +5,7 @@ import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { SearchBar } from '@/components/SearchBar';
 import { TypeFilter } from '@/components/TypeFilter';
 import { PokemonDetailModal } from '@/components/PokemonDetailModal';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { usePokemonContext } from '@/context/PokemonContext';
 import { usePokemon } from '@/hooks/usePokemon';
 import { fetchPokemonList, enrichPokemonWithTypes, fetchPokemonDetail } from '@/lib/pokeapi';
@@ -67,7 +68,6 @@ export default function Home() {
 
   const handleRetry = () => {
     setInitialError(null);
-    // Trigger re-fetch by setting initial loading state
     setIsInitialLoading(true);
     const loadInitialPokemon = async () => {
       try {
@@ -106,15 +106,15 @@ export default function Home() {
 
   if (initialError) {
     return (
-      <div className="min-h-screen bg-gray-100 p-4 flex items-center justify-center">
-        <div className="bg-white rounded-lg shadow-lg p-8 text-center max-w-md">
+      <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-4 flex items-center justify-center">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 text-center max-w-md">
           <h1 className="text-2xl font-bold text-red-600 mb-4">
             Error Loading Pokédex
           </h1>
-          <p className="text-gray-600 mb-6">{initialError}</p>
+          <p className="text-gray-600 dark:text-gray-300 mb-6">{initialError}</p>
           <button
             onClick={handleRetry}
-            className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+            className="px-6 py-2 bg-blue-500 dark:bg-blue-600 text-white rounded-lg hover:bg-blue-600 dark:hover:bg-blue-700 transition"
           >
             Retry
           </button>
@@ -124,26 +124,31 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-100">
-      {/* Header */}
-      <header className="bg-gradient-to-r from-blue-500 to-purple-600 text-white py-8 shadow-lg">
-        <div className="max-w-6xl mx-auto px-4">
-          <h1 className="text-4xl font-bold mb-2">Pokédex Lite</h1>
-          <p className="text-blue-100">
-            Explore and favorite your favorite Pokémon
-          </p>
+    <main className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
+      {/* Header with Theme Toggle */}
+      <header className="bg-gradient-to-r from-blue-500 to-purple-600 dark:from-blue-700 dark:to-purple-800 text-white py-6 shadow-lg">
+        <div className="max-w-6xl mx-auto px-4 flex items-center justify-between">
+          <div>
+            <h1 className="text-4xl font-bold mb-2">🔴 Pokédex Lite</h1>
+            <p className="text-blue-100">
+              Explore and favorite your favorite Pokémon
+            </p>
+          </div>
+          <ThemeToggle />
         </div>
       </header>
 
       {/* Main Content */}
       <div className="max-w-6xl mx-auto px-4 py-8">
         {/* Filters Section */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <h2 className="text-xl font-semibold mb-4">Search & Filter</h2>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8 transition-colors">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+            🔍 Search & Filter
+          </h2>
 
           {/* Search Bar */}
           <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Search by Name
             </label>
             <SearchBar onSearch={setSearchQuery} />
@@ -151,7 +156,7 @@ export default function Home() {
 
           {/* Type Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Filter by Type
             </label>
             <TypeFilter
@@ -162,12 +167,12 @@ export default function Home() {
         </div>
 
         {/* Results Summary */}
-        <div className="mb-6 flex justify-between items-center">
-          <h2 className="text-2xl font-bold text-gray-800">
-            Pokémon ({totalFiltered})
+        <div className="mb-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+            ✨ Pokémon ({totalFiltered})
           </h2>
           {totalFiltered > 0 && (
-            <p className="text-gray-600">
+            <p className="text-gray-600 dark:text-gray-400">
               Showing {(currentPage - 1) * 20 + 1} -{' '}
               {Math.min(currentPage * 20, totalFiltered)} of {totalFiltered}
             </p>
@@ -182,21 +187,21 @@ export default function Home() {
                 <div
                   key={pokemon.id}
                   onClick={() => handleOpenPokemonDetail(pokemon)}
-                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl hover:scale-105 transition duration-300 cursor-pointer"
+                  className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-xl hover:scale-105 hover:-translate-y-1 transition duration-300 cursor-pointer transform"
                 >
                   {/* Pokemon Image */}
-                  <div className="bg-gradient-to-b from-blue-50 to-blue-100 p-4 flex justify-center">
+                  <div className="bg-gradient-to-b from-blue-50 dark:from-blue-900 to-blue-100 dark:to-blue-800 p-4 flex justify-center">
                     <img
                       src={pokemon.imageUrl}
                       alt={pokemon.name}
-                      className="h-32 w-32 object-contain"
+                      className="h-32 w-32 object-contain drop-shadow-lg"
                       loading="lazy"
                     />
                   </div>
 
                   {/* Pokemon Info */}
                   <div className="p-4">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 capitalize">
                       {pokemon.name}
                     </h3>
 
@@ -205,7 +210,7 @@ export default function Home() {
                       {pokemon.types.map((type) => (
                         <span
                           key={type}
-                          className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full"
+                          className="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-100 text-xs rounded-full font-medium capitalize"
                         >
                           {type}
                         </span>
@@ -214,11 +219,14 @@ export default function Home() {
 
                     {/* Favorite Button */}
                     <button
-                      onClick={() => toggleFavorite(pokemon.id)}
-                      className={`w-full py-2 rounded-lg font-medium transition ${
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleFavorite(pokemon.id);
+                      }}
+                      className={`w-full py-2 rounded-lg font-medium transition transform hover:scale-105 ${
                         isFavorited(pokemon.id)
-                          ? 'bg-yellow-400 text-yellow-900 hover:bg-yellow-500'
-                          : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                          ? 'bg-yellow-400 dark:bg-yellow-500 text-yellow-900 hover:bg-yellow-500 dark:hover:bg-yellow-600'
+                          : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
                       }`}
                     >
                       {isFavorited(pokemon.id)
@@ -236,17 +244,17 @@ export default function Home() {
                 <button
                   onClick={goToPreviousPage}
                   disabled={currentPage === 1}
-                  className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition"
+                  className="px-6 py-2 bg-blue-500 dark:bg-blue-600 text-white rounded-lg hover:bg-blue-600 dark:hover:bg-blue-700 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:cursor-not-allowed transition"
                 >
                   ← Previous
                 </button>
-                <span className="px-4 py-2 flex items-center text-gray-700 font-medium">
+                <span className="px-4 py-2 flex items-center text-gray-700 dark:text-gray-300 font-medium">
                   Page {currentPage} of {totalPages}
                 </span>
                 <button
                   onClick={goToNextPage}
                   disabled={currentPage === totalPages}
-                  className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition"
+                  className="px-6 py-2 bg-blue-500 dark:bg-blue-600 text-white rounded-lg hover:bg-blue-600 dark:hover:bg-blue-700 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:cursor-not-allowed transition"
                 >
                   Next →
                 </button>
@@ -254,8 +262,8 @@ export default function Home() {
             )}
           </>
         ) : (
-          <div className="bg-white rounded-lg shadow-md p-8 text-center">
-            <p className="text-gray-500 text-lg">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 text-center">
+            <p className="text-gray-500 dark:text-gray-400 text-lg">
               No Pokémon found matching your criteria. Try adjusting your
               search or filters.
             </p>
