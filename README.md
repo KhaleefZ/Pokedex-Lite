@@ -1,4 +1,4 @@
-# 🔴 Pokédex Lite - Frontend Developer Assignment
+# 🔴 Pokédex Lite 
 
 ## 📌 Assignment Overview
 
@@ -300,7 +300,6 @@ All features have been tested and verified working:
 
 ## 🔗 Resources & Links
 
-**Live Application**: https://pokedex-lite.vercel.app *(after deployment)*  
 **GitHub Repository**: https://github.com/KhaleefZ/Pokedex-Lite  
 **Project Documentation**: See [pokedex-lite/README.md](./pokedex-lite/README.md)
 
@@ -368,12 +367,3 @@ For any questions about the implementation:
 ---
 
 ## 🎉 Thank You!
-
-This assignment showcases a complete, production-ready web application built with modern technologies and best practices. The project is ready for deployment and submission.
-
-**Status**: ✅ COMPLETE & READY FOR DEPLOYMENT
-
----
-
-*Last Updated: April 29, 2026*  
-*Project: Pokédex Lite - Frontend Developer Assignment*
