@@ -2,8 +2,6 @@
 
 A modern, fully responsive web application for browsing and managing your favorite Pokémon. Built with Next.js, TypeScript, and Tailwind CSS.
 
-**Live Demo:** [Pokédex Lite on Vercel](#) *(Deploy to get URL)*  
-**GitHub Repository:** [khaleef/pokedex-lite](https://github.com/khaleef/pokedex-lite)
 
 ---
 
